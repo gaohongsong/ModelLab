@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0">
+  <title>Entity Relationship Diagram Creator</title>
+  <link rel="shortcut icon" href="favicon.ico?v=1502107370">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.3.1/semantic.min.css">
+  <link type="text/css" href="./static/base.css" rel="stylesheet">
+  <link rel="stylesheet" href="./static/font.css" media="all">
+  <style>
+  .entity {
+    margin-top: 30px;
+    left: 400px;
+  }
+  </style>
+</head>
+
+<body class="editor">
+  <div id="react">
+    <div>
+      <div class="ui borderless menu" style="border-radius: 0px; margin-bottom: 0px;">
+        <div class="item" style="padding: 6px 16px;">
+          <a href="http://ponyorm.com/">
+            <img src="./static/logo.png">
+          </a>
+        </div>
+        <div class="item" style="padding: 6px 16px;">
+          <p>
+            <span>Editing</span>
+            <span> diagram </span>
+            <strong>
+              <a href="https://editor.ponyorm.com/user/hongsong">hongsong</a>/hello</strong>
+          </p>
+        </div>
+        <div class="right menu">
+          <div class="item">
+            <a href="https://editor.ponyorm.com/explore">Explore</a>
+          </div>
+          <div class="item">
+            <a class="test_home" href="https://editor.ponyorm.com/user/hongsong">hongsong</a>
+          </div>
+          <div class="item">
+            <a class="logout-button" href="https://editor.ponyorm.com/logout">Log out</a>
+          </div>
+          <div class="item">
+            <button class="ui green basic button" role="button">Feedback</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="ui pointing secondary menu" style="margin-bottom: 0px;">
+          <a class="item active" href="https://editor.ponyorm.com/user/hongsong/hello" style="color: rgb(65, 131, 196);">Designer</a>
+          <a class="item" href="https://editor.ponyorm.com/user/hongsong/hello/python" style="color: rgb(65, 131, 196);">Models</a>
+          <a class="item" href="https://editor.ponyorm.com/user/hongsong/hello/sqlite" style="color: rgb(65, 131, 196);">SQLite</a>
+          <a class="item" href="https://editor.ponyorm.com/user/hongsong/hello/mysql" style="color: rgb(65, 131, 196);">MySQL</a>
+          <a class="item" href="https://editor.ponyorm.com/user/hongsong/hello/postgres" style="color: rgb(65, 131, 196);">PostgreSQL</a>
+          <a class="item" href="https://editor.ponyorm.com/user/hongsong/hello/oracle" style="color: rgb(65, 131, 196);">Oracle</a>
+          <a class="item" href="https://editor.ponyorm.com/user/hongsong/hello/settings" style="color: rgb(65, 131, 196);">Settings</a>
+          <a class="item" href="https://editor.ponyorm.com/user/hongsong/hello/snapshots" style="color: rgb(65, 131, 196);">Snapshots</a>
+        </div>
+        <div id="diagram" class="tab-pane active">
+          <div>
+            <div class="ui borderless menu" style="border-top: 0px; padding: 3px;">
+              <div class="item" style="padding: 10px 6px;">
+                <button class="ui basic icon left labeled button new-entity-button" role="button" style="padding: 10px 6px;">
+                  <i aria-hidden="true" class="plus icon"></i>New Entity</button>
+              </div>
+              <div class="item" style="padding: 10px 6px;">
+                <button class="ui basic icon left labeled button" role="button" style="padding: 10px 6px;">
+                  <i aria-hidden="true" class="forward icon"></i> Expand All</button>
+              </div>
+              <div class="item" style="padding: 10px 6px;">
+                <button class="ui basic icon left labeled button save-diagram-button" role="button" style="padding: 10px 6px;">
+                  <i aria-hidden="true" class="save icon"></i>Save</button>
+              </div>
+              <div class="item" style="padding: 10px 6px;">
+                <button class="ui basic icon left labeled button clone-diagram-button" role="button" style="padding: 10px 6px;">
+                  <i aria-hidden="true" class="copy icon"></i>Clone Diagram</button>
+              </div>
+              <div class="item" style="padding: 10px 6px;">
+                <button class="ui basic icon left labeled button" role="button" style="padding: 10px 6px;">
+                  <i aria-hidden="true" class="tag icon"></i>Make Snapshot</button>
+              </div>
+              <div class="item" style="padding: 10px 6px;">
+                <button class="ui basic icon left labeled button" role="button" style="padding: 10px 6px; color: black;">
+                  <i aria-hidden="true" class="image icon"></i>Download as Image</button>
+              </div>
+              <div class="item">
+                <input type="range" step="2" min="50" max="100" value="100">
+              </div>
+            </div>
+          </div>
+          <ul class="sidebar__control-panel sidebar__control-panel__direction__ascending sidebar__control-panel__active">
+            <li class="sidebar__control ">Navigation</li>
+          </ul>
+          <ul class="sidebar__control-panel sidebar__control-panel__direction__descending sidebar__control-panel__active">
+            <li class="sidebar__control ">Properties</li>
+          </ul>
+          <div class="sidebar-view sidebar-view__left" style="top: 142px; height: calc((100vh - 142px) + 2px);">
+            <div class="ui black label sidebar-view__label left" style="cursor: pointer;">
+              <i aria-hidden="true" class="close icon" style="font-size: 15px; color: rgb(255, 255, 255); opacity: 1; margin-left: 1px;"></i>
+            </div>
+            <div class="ui segment sidebar-view__wrapper" style="margin-top: 0px; overflow-y: scroll;">
+              <div role="listitem" class="item" style="padding: 3px;">
+                <div class="ui fluid labeled input">
+                  <div class="ui basic label label">Filter</div>
+                  <input type="text" value="" placeholder="filter">
+                </div>
+              </div>
+              <div role="list" class="ui selection list">
+                <div role="listitem" class="item">User</div>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-view sidebar-view__right">
+            <div class="ui black label sidebar-view__label right" style="cursor: pointer;">
+              <i aria-hidden="true" class="close icon" style="font-size: 15px; color: rgb(255, 255, 255); opacity: 1; margin-left: 1px;"></i>
+            </div>
+            <div class="ui segment sidebar-view__wrapper" style="margin-top: 0px;">
+              <div id="sidebar">
+                <div class="properties" style="max-height: calc((100vh - 68px) - 130.301px); overflow-y: auto; overflow-x: hidden; text-align: center;">
+                  <table class="ui table" style="border: none;">
+                    <thead class="">
+                      <tr colspan="2" class="" style="padding: 0px;">
+                        <th colspan="2" class="center aligned">Attribute Properties</th>
+                      </tr>
+                    </thead>
+                    <tbody class="">
+                      <tr>
+                        <td class="sidebar-input__name">Entity name</td>
+                        <td class="sidebar-input__value" style="text-align: left;">
+                          <div class="ui disabled fluid input">
+                            <input type="text" value="User" name="entity-name" disabled="" tabindex="-1">
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Attribute name</td>
+                        <td class="sidebar-input__value" style="text-align: left;">
+                          <div class="ui fluid input">
+                            <input type="text" value="id" name="attr-name">
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Class</td>
+                        <td class="sidebar-input__value">
+                          <div role="listbox" aria-disabled="false" aria-expanded="false" class="ui fluid selection dropdown test_sidebar_attribute-class"
+                            tabindex="0">
+                            <div class="text" role="alert" aria-live="polite">PrimaryKey</div>
+                            <i aria-hidden="true" class="dropdown icon"></i>
+                            <div class="menu transition">
+                              <div role="option" aria-checked="true" aria-selected="true" class="active selected item" style="pointer-events: all;">
+                                <span class="text">PrimaryKey</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">Required</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">Optional</span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Type</td>
+                        <td class="sidebar-input__value">
+                          <div role="listbox" aria-disabled="false" aria-expanded="false" class="ui fluid selection dropdown test_sidebar_attribute-type"
+                            tabindex="0">
+                            <div class="text" role="alert" aria-live="polite">int</div>
+                            <i aria-hidden="true" class="dropdown icon"></i>
+                            <div class="menu transition">
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">str</span>
+                              </div>
+                              <div role="option" aria-checked="true" aria-selected="true" class="active selected item" style="pointer-events: all;">
+                                <span class="text">int</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">float</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">Decimal</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">datetime</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">date</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">time</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">timedelta</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">buffer</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">bool</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">LongStr</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">UUID</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">Json</span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Size</td>
+                        <td class="sidebar-input__value">
+                          <div role="listbox" aria-disabled="false" aria-expanded="false" class="ui fluid selection dropdown test-size" tabindex="0">
+                            <div class="text" role="alert" aria-live="polite"></div>
+                            <i aria-hidden="true" class="dropdown icon"></i>
+                            <div class="menu transition">
+                              <div role="option" aria-checked="true" aria-selected="true" class="active selected item" style="pointer-events: all;">
+                                <span class="text"></span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">8</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">16</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">24</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">32</span>
+                              </div>
+                              <div role="option" aria-checked="false" aria-selected="false" class="item" style="pointer-events: all;">
+                                <span class="text">64</span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Auto increment</td>
+                        <td class="sidebar-input__value" style="text-align: center;">
+                          <div class="ui checked fitted checkbox test-auto-increment" style="vertical-align: middle;">
+                            <input type="checkbox" class="hidden" readonly="" tabindex="0" value="on">
+                            <label></label>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Unsigned</td>
+                        <td class="sidebar-input__value" style="text-align: center;">
+                          <div class="ui fitted checkbox test-unsigned" style="vertical-align: middle;">
+                            <input type="checkbox" class="hidden" readonly="" tabindex="0" value="on">
+                            <label></label>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Default value</td>
+                        <td class="sidebar-input__value" style="text-align: left;">
+                          <div class="ui fluid input">
+                            <input type="text" value="">
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Database Column</td>
+                        <td class="sidebar-input__value" style="text-align: left;">
+                          <div class="ui fluid input">
+                            <input type="text" value="">
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">SQL Type</td>
+                        <td class="sidebar-input__value" style="text-align: left;">
+                          <div class="ui fluid input">
+                            <input type="text" value="">
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">SQL Default</td>
+                        <td class="sidebar-input__value" style="text-align: left;">
+                          <div class="ui fluid input">
+                            <input type="text" value="">
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Intermediate Table</td>
+                        <td class="sidebar-input__value" style="text-align: left;">
+                          <div class="ui fluid input">
+                            <input type="text" value="">
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="sidebar-input__name">Comment</td>
+                        <td class="sidebar-input__value">
+                          <form class="ui form">
+                            <textarea rows="1"></textarea>
+                          </form>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div>
+                    <div class="ui buttons" style="margin-bottom: 14px;">
+                      <button class="ui black basic button attribute-move-up-btn" role="button">
+                        <i aria-hidden="true" class="arrow up icon"></i>Move Up</button>
+                      <button class="ui black basic button attribute-move-down-btn" role="button">
+                        <i aria-hidden="true" class="arrow down icon"></i>Move Down</button>
+                    </div>
+                    <button class="ui red basic button attr-rel-delete" role="button">Delete attribute</button>
+                  </div>
+                  <br>
+                </div>
+                <div id="mini-view">
+                  <svg height="130.30123456790125" version="1.1" xmlns="http://www.w3.org/2000/svg" style="width: 100%; display: block;">
+                    <rect x="83.6346418274562" y="30.005758852665043" width="33.45500850151549" height="15.802868337399278" rx="1.344924964885045"
+                      ry="1.344924964885045" fill="#fcfcfc" stroke="#000"></rect>
+                    <rect class="mini-view__rect" x="10" y="10" height="112.30123456790126" width="272.3473053892216" rx="0" ry="0" fill="#bbbbbb"
+                      stroke="#bbbbbb" fill-opacity="0" stroke-width="2"></rect>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div id="pad" style="height: 668px; margin-right: 300px;">
+            <svg height="10000" version="1.1" width="10000" xmlns="http://www.w3.org/2000/svg" id="svgpad" viewBox="0 0 10000 10000"
+              preserveAspectRatio="xMidYMid meet" style="overflow: hidden; position: relative; cursor: default;"></svg>
+            <ul id="schema">
+              <li>
+                <table id="id1" class="entity " style="transformx: translate(5106px, 5188px) scale(1);">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="entity-caption ">
+                          <div class="caption-wrapper">
+                            <span class="entity-name entity-name__extended">User</span>
+                            <span class="expand-entity-button">
+                              <i aria-hidden="true" class="forward icon"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table class="entity__content">
+                          <tbody>
+                            <tr id="id2" class="entity-attr attribute sel-attr ">
+                              <td class="bold15 attribute__name">id</td>
+                              <td class="italic attribute__class">int</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="ui mini compact fluid buttons">
+                          <button class="ui basic button test_entity_add-attribute" role="button" style="border-right: 1px solid rgb(204, 204, 204); border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add attribute</button>
+                          <button class="ui basic button test_entity_add-relation" role="button" style="border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add relation</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </li>
+            </ul>
+          </div> -->
+          <div id="pad" style="height: 632px; margin-right: 300px;">
+            <svg height="10000" version="1.1" width="10000" xmlns="http://www.w3.org/2000/svg" id="svgpad" viewBox="0 0 10000 10000"
+              preserveAspectRatio="xMidYMid meet" style="overflow: hidden; position: relative; cursor: default;">
+              <path fill="none" stroke="#254559" d="M 5416 5314 l -10 0 M 5416 5314 C 5472.5 5314 5472.5 5209 5529 5209 M 5529 5209 l 10 10 M 5529 5209 l 10 -10 M 5529 5209 l 10 0"
+                stroke-linecap="round" stroke-width="3"></path>
+              <path fill="none" stroke="#254559" d="M 5819 5231 l -10 -10 M 5819 5231 l -10 10 M 5819 5231 l -10 0 M 5819 5231 C 5859 5231 5808 5336 5848 5336 M 5848 5336 l 10 10 M 5848 5336 l 10 -10 M 5848 5336 l 10 0"
+                stroke-linecap="round" stroke-width="3"></path>
+            </svg>
+            <ul id="schema">
+              <li>
+                <table id="id1" class="entity " style="left:800px;transformx: translate(5207px, 5221px) scale(1);">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="entity-caption ">
+                          <div class="caption-wrapper">
+                            <span class="entity-name entity-name__extended">Department</span>
+                            <span class="expand-entity-button">
+                              <i aria-hidden="true" class="forward icon"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table class="entity__content">
+                          <tbody>
+                            <tr id="id2" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">number</td>
+                              <td class="italic attribute__class">int</td>
+                            </tr>
+                            <tr id="id3" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">name</td>
+                              <td class="italic attribute__class">str</td>
+                            </tr>
+                            <tr id="id5" class="entity-attr attribute  ">
+                              <td class="attribute__name">courses</td>
+                              <td class="attribute__class">Course</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="ui mini compact fluid buttons">
+                          <button class="ui basic button test_entity_add-attribute" role="button" style="border-right: 1px solid rgb(204, 204, 204); border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add attribute</button>
+                          <button class="ui basic button test_entity_add-relation" role="button" style="border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add relation</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </li>
+              <li>
+                <table id="id11" class="entity " style="top:300px;transformx: translate(5539px, 5050px) scale(1);">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="entity-caption ">
+                          <div class="caption-wrapper">
+                            <span class="entity-name entity-name__extended">Course</span>
+                            <span class="expand-entity-button">
+                              <i aria-hidden="true" class="backward icon"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table class="entity__content">
+                          <tbody>
+                            <tr id="id12" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">name</td>
+                              <td class="italic attribute__class">str</td>
+                              <td class="type-column attribute__type">PrimaryKey</td>
+                            </tr>
+                            <tr id="id13" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">semester</td>
+                              <td class="italic attribute__class">int</td>
+                              <td class="type-column attribute__type">PrimaryKey</td>
+                            </tr>
+                            <tr id="id14" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">lect_hours</td>
+                              <td class="italic attribute__class">int</td>
+                              <td class="type-column attribute__type">Required</td>
+                            </tr>
+                            <tr id="id15" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">lab_hours</td>
+                              <td class="italic attribute__class">int</td>
+                              <td class="type-column attribute__type">Required</td>
+                            </tr>
+                            <tr id="id16" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">credits</td>
+                              <td class="italic attribute__class">int</td>
+                              <td class="type-column attribute__type">Required</td>
+                            </tr>
+                            <tr id="id17" class="entity-attr attribute  ">
+                              <td class="attribute__name">dept</td>
+                              <td class="attribute__class">Department</td>
+                              <td class="attribute__type">Required</td>
+                            </tr>
+                            <tr id="id18" class="entity-attr attribute  ">
+                              <td class="attribute__name">students</td>
+                              <td class="attribute__class">Student</td>
+                              <td class="attribute__type">Set</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="ui mini compact fluid buttons">
+                          <button class="ui basic button test_entity_add-attribute" role="button" style="border-right: 1px solid rgb(204, 204, 204); border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add attribute</button>
+                          <button class="ui basic button test_entity_add-relation" role="button" style="border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add relation</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </li>
+              <li>
+                <table id="id19" class="entity " style="transformx: translate(5858px, 5177px) scale(1);">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="entity-caption ">
+                          <div class="caption-wrapper">
+                            <span class="entity-name entity-name__extended">Student</span>
+                            <span class="expand-entity-button">
+                              <i aria-hidden="true" class="forward icon"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table class="entity__content">
+                          <tbody>
+                            <tr id="id20" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">id</td>
+                              <td class="italic attribute__class">int</td>
+                            </tr>
+                            <tr id="id21" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">name</td>
+                              <td class="italic attribute__class">str</td>
+                            </tr>
+                            <tr id="id22" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">dob</td>
+                              <td class="italic attribute__class">date</td>
+                            </tr>
+                            <tr id="id23" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">picture</td>
+                              <td class="italic attribute__class">buffer</td>
+                            </tr>
+                            <tr id="id24" class="entity-attr attribute  ">
+                              <td class="bold15 attribute__name">gpa</td>
+                              <td class="italic attribute__class">float</td>
+                            </tr>
+                            <tr id="id26" class="entity-attr attribute  ">
+                              <td class="attribute__name">courses</td>
+                              <td class="attribute__class">Course</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="ui mini compact fluid buttons">
+                          <button class="ui basic button test_entity_add-attribute" role="button" style="border-right: 1px solid rgb(204, 204, 204); border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add attribute</button>
+                          <button class="ui basic button test_entity_add-relation" role="button" style="border-top: 1px solid rgb(204, 204, 204); border-radius: 0px;">Add relation</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </li>
+            </ul>
+          </div>
+          <table class="entity" style="visibility: hidden;">
+            <tbody>
+              <tr>
+                <td>
+                  <table>
+                    <tbody>
+                      <tr class="attribute entity-attr">
+                        <td class="attribute__name">T</td>
+                        <td class="italic">T</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="notification__wrapper">
+        <span></span>
+      </div>
+    </div>
+  </div>
+  <!-- <script type="text/javascript">
+    window.initialData = { "inheritances": [], "relationships": [], "availableID": 1, "entities": [], "miniView": { "minx": 1.79e+308, "maxx": 5e-324, "miny": 1.79e+308, "maxy": 5e-324, "minl": 1.79e+308, "mint": 1.79e+308, "ratio": 0, "width": 0, "height": 0, "paddingX": 0, "paddingY": 0, "negPaddingX": 0, "negPaddingY": 0 }, "state": { "currentRevision": null, "padHeight": 1, "padWidth": 1, "padOffset": { "top": 0, "left": 0 }, "selected": { "id": "0", "objectType": "mapping" }, "scrollLeft": 5000, "scrollTop": 5000 }, "database": { "objectType": "database", "system": "PostgreSQL", "shouldCreateDB": "", "host": "", "port": "", "user": "", "password": "", "useDatabase": "", "filename": "", "createTables": "" }, "history": { "revisions": [] }, "diagram": { "name": "unknown diagram", "owner": "unknown" }, "user": { "name": "unknown", "canChangeSettings": false } };
+    window.editorData = { "diagramOwner": "hongsong", "diagramName": "hello", "diagramDescription": "", "updatedDT": "2018-04-07T02:36:24+00:00", "isPrivate": false, "basePath": "/user/hongsong/hello", "snapshotNumber": null, "snapshotName": null, "snapshotUpdatedDT": null, "username": "hongsong", "canChangeSettings": true, "canTag": true, "canEdit": true, "isFree": true, "invites": [], "rights": [], "diagramType": "pony" }
+    window.basePath = '/user/hongsong/hello'
+  </script> -->
+
+<script type="text/javascript">
+  window.initialData = {"inheritances": [], "relationships": [{"objectType": "relation", "id": 20, "attributes": [{"entityID": 1, "id": 4, "type": "attribute"}, {"entityID": 5, "id": 11, "type": "attribute"}], "path": [], "miniViewPath": []}, {"objectType": "relation", "id": 21, "attributes": [{"entityID": 5, "id": 12, "type": "attribute"}, {"entityID": 13, "id": 19, "type": "attribute"}], "path": [], "miniViewPath": []}], "availableID": 22, "entities": [{"objectType": "entity", "id": 1, "name": "Department", "inheritsFrom": "", "inheritsTo": [], "shouldUpdateRelations": true, "shouldUpdateInheritance": true, "left": 5207, "top": 5221, "isExpanded": false, "plural": "Departments", "table": "Department", "comment": "", "resource": "", "miniViewRect": {"x": 0, "y": 0, "width": 0, "height": 0}, "discrName": "", "discrType": "", "discrValue": "", "attributes": [{"objectType": "attribute", "id": 2, "entity": 1, "isHighlighted": false, "name": "number", "cls": "PrimaryKey", "type": "int", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 0, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 3, "entity": 1, "isHighlighted": false, "name": "name", "cls": "Required", "type": "str", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 1, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attributeRelationship", "id": 4, "entity": 1, "isHighlighted": false, "name": "courses", "cls": "Set", "type": "Course", "unique": false, "defaultValue": "", "sqlType": "", "index": 2, "cascadeDelete": "default", "column": "", "_volatile": false, "hidden": false, "comment": "", "reverseAttributeID": 11, "reverseAttributeName": "dept"}]}, {"objectType": "entity", "id": 5, "name": "Course", "inheritsFrom": "", "inheritsTo": [], "shouldUpdateRelations": true, "shouldUpdateInheritance": true, "left": 5539, "top": 5050, "isExpanded": false, "plural": "Courses", "table": "Course", "comment": "", "resource": "", "miniViewRect": {"x": 0, "y": 0, "width": 0, "height": 0}, "discrName": "", "discrType": "", "discrValue": "", "attributes": [{"objectType": "attribute", "id": 6, "entity": 5, "isHighlighted": false, "name": "name", "cls": "PrimaryKey", "type": "str", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 0, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 7, "entity": 5, "isHighlighted": false, "name": "semester", "cls": "PrimaryKey", "type": "int", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 1, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 8, "entity": 5, "isHighlighted": false, "name": "lect_hours", "cls": "Required", "type": "int", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 2, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 9, "entity": 5, "isHighlighted": false, "name": "lab_hours", "cls": "Required", "type": "int", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 3, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 10, "entity": 5, "isHighlighted": false, "name": "credits", "cls": "Required", "type": "int", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 4, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attributeRelationship", "id": 11, "entity": 5, "reverseAttributeID": 4, "reverseAttributeName": "courses", "isHighlighted": false, "name": "dept", "cls": "Required", "type": "Department", "unique": false, "defaultValue": "", "sqlType": "", "index": 5, "cascadeDelete": "default", "column": "", "_volatile": false, "hidden": false, "comment": ""}, {"objectType": "attributeRelationship", "id": 12, "entity": 5, "isHighlighted": false, "name": "students", "cls": "Set", "type": "Student", "unique": false, "defaultValue": "", "sqlType": "", "index": 6, "cascadeDelete": "default", "column": "", "_volatile": false, "hidden": false, "comment": "", "reverseAttributeID": 19, "reverseAttributeName": "courses"}]}, {"objectType": "entity", "id": 13, "name": "Student", "inheritsFrom": "", "inheritsTo": [], "shouldUpdateRelations": true, "shouldUpdateInheritance": true, "left": 5858, "top": 5177, "isExpanded": false, "plural": "Students", "table": "Student", "comment": "", "resource": "", "miniViewRect": {"x": 0, "y": 0, "width": 0, "height": 0}, "discrName": "", "discrType": "", "discrValue": "", "attributes": [{"objectType": "attribute", "id": 14, "entity": 13, "isHighlighted": false, "name": "id", "cls": "PrimaryKey", "type": "int", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 0, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 15, "entity": 13, "isHighlighted": false, "name": "name", "cls": "Required", "type": "str", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 1, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 16, "entity": 13, "isHighlighted": false, "name": "dob", "cls": "Required", "type": "date", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 2, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 17, "entity": 13, "isHighlighted": false, "name": "picture", "cls": "Optional", "type": "buffer", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 3, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attribute", "id": 18, "entity": 13, "isHighlighted": false, "name": "gpa", "cls": "Optional", "type": "float", "auto": false, "size": "", "unique": false, "defaultValue": "", "lazy": false, "sqlType": "", "index": 4, "maxLength": "", "nullable": false, "column": "", "_volatile": false, "hidden": false, "comment": "", "unsigned": false}, {"objectType": "attributeRelationship", "id": 19, "entity": 13, "reverseAttributeID": 12, "reverseAttributeName": "students", "isHighlighted": false, "name": "courses", "cls": "Set", "type": "Course", "unique": false, "defaultValue": "", "sqlType": "", "index": 5, "cascadeDelete": "default", "column": "", "_volatile": false, "hidden": false, "comment": ""}]}], "miniView": {"minx": 1.79e+308, "maxx": 5e-324, "miny": 1.79e+308, "maxy": 5e-324, "minl": 1.79e+308, "mint": 1.79e+308, "ratio": 0, "width": 0, "height": 0, "paddingX": 0, "paddingY": 0, "negPaddingX": 0, "negPaddingY": 0}, "state": {"currentRevision": null, "padHeight": 1, "padWidth": 1, "padOffset": {"top": 0, "left": 0}, "selected": {"id": "0", "objectType": "mapping"}, "scrollLeft": 5000, "scrollTop": 5000}, "database": {"objectType": "database", "system": "PostgreSQL", "shouldCreateDB": "", "host": "", "port": "", "user": "", "password": "", "useDatabase": "", "filename": "", "createTables": ""}, "history": {"revisions": []}, "diagram": {"name": "unknown diagram", "owner": "unknown"}, "user": {"name": "unknown", "canChangeSettings": false}};
+  window.editorData = {"diagramOwner": "hongsong", "diagramName": "ModelLab", "diagramDescription": "Very simple data model of a university Copied from pony/University", "updatedDT": "2018-04-07T05:38:25+00:00", "isPrivate": false, "basePath": "/user/hongsong/ModelLab", "snapshotNumber": null, "snapshotName": null, "snapshotUpdatedDT": null, "username": "hongsong", "canChangeSettings": true, "canTag": true, "canEdit": true, "isFree": true, "invites": [], "rights": [], "diagramType": "pony"}
+    window.basePath = '/user/hongsong/ModelLab'
+</script>
+
+</body>
+
+</html>
